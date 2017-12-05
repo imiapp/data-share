@@ -16,7 +16,7 @@
 
 ## 三、Demo
 
-https://github.com/imiapp
+https://github.com/imiapp/data-share/tree/master/demo
 
 ## 四、版本日志
 
