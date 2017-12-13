@@ -6,6 +6,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.apache.curator.framework.recipes.locks.Lease;
+import org.junit.Test;
 
 import com.vport.open.datashare.constants.CommonConstants;
 import com.vport.open.datashare.demo.lock.Lock;
@@ -22,15 +23,13 @@ import com.vport.open.datashare.vo.StoreDataParams;
  *
  */
 public class ConcurrencyStoreTester {
-
+	
 	private static void storeData(final TestHander hander) {
 
 		final List<String> logList = new ArrayList<String>();
 
 		// 模拟业务并发请求数
 		int count = 5;
-
-		long start = System.currentTimeMillis();
 
 		Executor extractExecutor = Executors.newFixedThreadPool(count);
 		for (int i = 0; i < count; i++) {
@@ -52,12 +51,20 @@ public class ConcurrencyStoreTester {
 						// 加锁
 						lock = Lock.getLock(hander.LOCK_DATASHARE_STOREDATA);
 
+						long start = System.currentTimeMillis();
+						
 						String transactionHash = DataSharingRouter.storeData(params);
 
-						log = "===【存储】【SUCCESS】[" + j + "]: transactionHash=[" + transactionHash + "]";
+						long end = System.currentTimeMillis();
+						
+						log = "===【存储】【SUCCESS】[" + j + "]: transactionHash=[" + transactionHash + "]" + ", 耗时=[" + (end - start) + "]";
 						logList.add(log);
 						System.out.println(log);
 					} catch (IMIRpcException e) {
+						log = "===【存储】【ERROR】[" + j + "]: " + e.getMessage();
+						logList.add(log);
+						System.out.println(log);
+					}  catch (Exception e) {
 						log = "===【存储】【ERROR】[" + j + "]: " + e.getMessage();
 						logList.add(log);
 						System.out.println(log);
@@ -72,28 +79,30 @@ public class ConcurrencyStoreTester {
 			});
 		}
 
-		long end = System.currentTimeMillis();
-
-		System.out.println("总耗时：" + (end - start));
-
 		// 存储日志
 		hander.saveLogs(logList, "datashare-sdk-concurrency-store-test.log");
 	}
 
-	public static void main(String[] args) {
+//	@Test
+	public void tester() {
 
 		final TestHander hander = TestHander.INSTANCE;
 		hander.loadConfig();
 
 		storeData(hander);
-
+		
 		try {
-			Thread.sleep(600000);
+			Thread.sleep(300000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
 		System.exit(0);
+	}
+	
+	public static void main(String[] args) {
+
+		new ConcurrencyStoreTester().tester();
 	}
 
 }

@@ -25,6 +25,7 @@
   | TestHander.java | 测试数据类 |
   | QueryTester.java | 数据查询与验证测试类 |
   | ConcurrencyStoreTester.java | 模拟并发数据上链存储测试类 |
+  | InfoTester.java | 链上交易信息、块信息查询测试类 |
 
 ## 三、版本日志
 

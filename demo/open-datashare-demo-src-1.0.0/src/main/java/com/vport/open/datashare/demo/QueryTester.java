@@ -3,6 +3,8 @@ package com.vport.open.datashare.demo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+
 import com.vport.open.datashare.constants.CommonConstants;
 import com.vport.open.datashare.exceptions.IMIRpcException;
 import com.vport.open.datashare.router.DataSharingRouter;
@@ -41,6 +43,10 @@ public class QueryTester {
 			log = "===【查询】【ERROR】: " + e.getMessage();
 			logList.add(log);
 			System.out.println(log);
+		} catch (Exception e) {
+			log = "===【查询】【ERROR】: " + e.getMessage();
+			logList.add(log);
+			System.out.println(log);
 		}
 		
 		if (null != dataList && !dataList.isEmpty()) {
@@ -64,6 +70,10 @@ public class QueryTester {
 					log = "===【验证】【ERROR】[" + i + "]: " + e.getMessage();
 					logList.add(log);
 					System.out.println(log);
+				} catch (Exception e) {
+					log = "===【验证】【ERROR】[" + i + "]: " + e.getMessage();
+					logList.add(log);
+					System.out.println(log);
 				}
 			}
 		}
@@ -72,11 +82,17 @@ public class QueryTester {
 		hander.saveLogs(logList, "datashare-sdk-get&verify-test.log");
 	}
 	
-	public static void main(String[] args) {
+//	@Test
+	public void tester() {
 
 		final TestHander hander = TestHander.INSTANCE;
 		hander.loadConfig();
 
 		queryData(hander);
+	}
+	
+	public static void main(String[] args) {
+
+		new QueryTester().tester();
 	}
 }
