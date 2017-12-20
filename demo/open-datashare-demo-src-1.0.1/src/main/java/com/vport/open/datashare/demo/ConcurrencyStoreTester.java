@@ -8,11 +8,13 @@ import java.util.concurrent.Executors;
 import org.apache.curator.framework.recipes.locks.Lease;
 import org.junit.Test;
 
+import com.alibaba.fastjson.JSON;
 import com.vport.open.datashare.constants.CommonConstants;
 import com.vport.open.datashare.demo.lock.Lock;
 import com.vport.open.datashare.exceptions.IMIRpcException;
 import com.vport.open.datashare.router.DataSharingRouter;
 import com.vport.open.datashare.vo.StoreDataParams;
+import com.vport.open.datashare.vo.StoreDataVO;
 
 /**
  * 
@@ -29,7 +31,7 @@ public class ConcurrencyStoreTester {
 		final List<String> logList = new ArrayList<String>();
 
 		// 模拟业务并发请求数
-		int count = 5;
+		int count = 1;
 
 		Executor extractExecutor = Executors.newFixedThreadPool(count);
 		for (int i = 0; i < count; i++) {
@@ -53,11 +55,11 @@ public class ConcurrencyStoreTester {
 
 						long start = System.currentTimeMillis();
 						
-						String transactionHash = DataSharingRouter.storeData(params);
+						StoreDataVO vo = DataSharingRouter.storeData(params);
 
 						long end = System.currentTimeMillis();
 						
-						log = "===【存储】【SUCCESS】[" + j + "]: transactionHash=[" + transactionHash + "]" + ", 耗时=[" + (end - start) + "]";
+						log = "===【存储】【SUCCESS】[" + j + "]: StoreDataVO=[" + JSON.toJSONString(vo) + "]" + ", 耗时=[" + (end - start) + "]";
 						logList.add(log);
 						System.out.println(log);
 					} catch (IMIRpcException e) {
